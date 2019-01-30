@@ -58,9 +58,6 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
     green = !green;
     setState(() { 
     });
-    // new Timer.periodic(Duration(milliseconds: 1000), (timer) {
-    //   print('one second passed');
-    // });
   }
 
   executeAnimation() {
@@ -71,7 +68,7 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap(),
+      onTap: onTap,
       child: green
           ? ColorBox(
               //margin: EdgeInsets.only(top: _boxAnimation.value),
