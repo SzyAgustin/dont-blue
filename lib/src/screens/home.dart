@@ -14,7 +14,7 @@ class HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text('Do not press the Blue!'),
+        title: Text('Do not touch the Blue!'),
       ),
       body: Center(
         child: BoxPressedAnimation(),

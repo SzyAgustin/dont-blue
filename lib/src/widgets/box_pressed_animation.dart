@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'color_box.dart';
 import 'package:vibration/vibration.dart';
-import 'dart:async';
 
 class BoxPressedAnimation extends StatefulWidget {
   @override
@@ -13,6 +12,7 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
   Animation<double> _boxAnimation;
   AnimationController _boxController;
   int counter = 0;
+  bool green = false;
 
   @override
   void initState() {
@@ -54,12 +54,16 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
 
   onTap() {
     executeAnimation();
+
+    green = !green;
+    setState(() { 
+    });
     // new Timer.periodic(Duration(milliseconds: 1000), (timer) {
     //   print('one second passed');
     // });
   }
 
-  executeAnimation(){
+  executeAnimation() {
     _boxController.forward();
     Vibration.vibrate(duration: 75);
   }
@@ -67,13 +71,20 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: ColorBox(
-        //margin: EdgeInsets.only(top: _boxAnimation.value),
-        height: _boxAnimation.value,
-        width: _boxAnimation.value,
-        color: Colors.blue,
-      ),
+      onTap: onTap(),
+      child: green
+          ? ColorBox(
+              //margin: EdgeInsets.only(top: _boxAnimation.value),
+              height: _boxAnimation.value,
+              width: _boxAnimation.value,
+              color: Colors.lightGreenAccent[700],
+            )
+          : ColorBox(
+              //margin: EdgeInsets.only(top: _boxAnimation.value),
+              height: _boxAnimation.value,
+              width: _boxAnimation.value,
+              color: Colors.indigo[700],
+            ),
     );
   }
 }
