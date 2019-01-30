@@ -38,10 +38,10 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
       } else if (status == AnimationStatus.dismissed) {
         _boxController.forward();
         counter++;
-        if (counter == 3) {
-          counter = 0;
-          _boxController.stop();
-        }
+      }
+      if (counter == 3) {
+        counter = 0;
+        _boxController.stop();
       }
     });
   }
@@ -56,32 +56,23 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
     executeAnimation();
 
     green = !green;
-    setState(() { 
-    });
+    setState(() {});
   }
 
   executeAnimation() {
     _boxController.forward();
-    Vibration.vibrate(duration: 75);
+    Vibration.vibrate(duration: 150);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: green
-          ? ColorBox(
-              //margin: EdgeInsets.only(top: _boxAnimation.value),
-              height: _boxAnimation.value,
-              width: _boxAnimation.value,
-              color: Colors.lightGreenAccent[700],
-            )
-          : ColorBox(
-              //margin: EdgeInsets.only(top: _boxAnimation.value),
-              height: _boxAnimation.value,
-              width: _boxAnimation.value,
-              color: Colors.indigo[700],
-            ),
+      child: Container(
+        height: _boxAnimation.value,
+        width: _boxAnimation.value,
+        color: green ? Colors.lightGreenAccent[700] : Colors.indigo[700],
+      ),
     );
   }
 }
