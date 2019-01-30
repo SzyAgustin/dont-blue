@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'color_box.dart';
 import 'package:vibration/vibration.dart';
+import 'dart:math';
 
 class BoxPressedAnimation extends StatefulWidget {
   @override
@@ -12,7 +12,8 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
   Animation<double> _boxAnimation;
   AnimationController _boxController;
   int counter = 0;
-  bool green = false;
+  Color color = Colors.blue;
+  List<Color> colors = [Colors.indigo[700], Colors.greenAccent[700], Colors.redAccent[700]];
 
   @override
   void initState() {
@@ -54,14 +55,17 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
 
   onTap() {
     executeAnimation();
-
-    green = !green;
     setState(() {});
   }
 
   executeAnimation() {
     _boxController.forward();
     Vibration.vibrate(duration: 150);
+    nextColor();
+  } 
+
+  nextColor(){
+    color = colors[Random().nextInt(3)];
   }
 
   @override
@@ -71,7 +75,7 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
       child: Container(
         height: _boxAnimation.value,
         width: _boxAnimation.value,
-        color: green ? Colors.lightGreenAccent[700] : Colors.indigo[700],
+        color: color,
       ),
     );
   }
