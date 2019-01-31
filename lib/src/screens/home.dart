@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/box_pressed_animation.dart';
+import '../animations/box_rotate.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -14,13 +15,11 @@ class HomeState extends State<Home> {
   Widget build(context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.cyan,
+        backgroundColor: Colors.indigo[700],
         title: Text('Do not touch the Blue!'),
       ),
       body: Center(
-        child: Container(
-          child: BoxPressedAnimation(),
-        ),
+        child: BoxRotate(),
       ),
     );
   }

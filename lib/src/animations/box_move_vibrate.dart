@@ -2,18 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import 'dart:math';
 
-class BoxPressedAnimation extends StatefulWidget {
+class BoxMoveVibrate extends StatefulWidget {
   @override
-  _BoxPressedAnimationState createState() => _BoxPressedAnimationState();
+  _BoxMoveVibrateState createState() => _BoxMoveVibrateState();
 }
 
-class _BoxPressedAnimationState extends State<BoxPressedAnimation>
+class _BoxMoveVibrateState extends State<BoxMoveVibrate>
     with SingleTickerProviderStateMixin {
   Animation<double> _boxAnimation;
   AnimationController _boxController;
   int counter = 0;
-  Color color = Colors.blue;
-  List<Color> colors = [Colors.indigo[700], Colors.greenAccent[700], Colors.redAccent[700]];
+  Color color = Colors.greenAccent[700];
+  List<Color> colors = [
+    Colors.indigo[700],
+    Colors.greenAccent[700],
+    Colors.redAccent[700],
+    Colors.yellowAccent[700],
+    Colors.pinkAccent,
+    Colors.orangeAccent[400]
+  ];
 
   @override
   void initState() {
@@ -54,18 +61,9 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
   }
 
   onTap() {
-    executeAnimation();
-    setState(() {});
-  }
-
-  executeAnimation() {
     _boxController.forward();
     Vibration.vibrate(duration: 150);
-    nextColor();
-  } 
-
-  nextColor(){
-    color = colors[Random().nextInt(3)];
+    setState(() => color = colors[Random().nextInt(colors.length)]);
   }
 
   @override
@@ -75,7 +73,13 @@ class _BoxPressedAnimationState extends State<BoxPressedAnimation>
       child: Container(
         height: _boxAnimation.value,
         width: _boxAnimation.value,
-        color: color,
+        child: AnimatedContainer(
+          duration: Duration(
+            milliseconds: 250,
+          ),
+          color: color,
+          curve: Curves.easeOut,
+        ),
       ),
     );
   }
