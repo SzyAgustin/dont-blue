@@ -19,7 +19,7 @@ class _ProgressBarState extends State<ProgressBar>
     super.initState();
     _progController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: (1000 + Random().nextInt(38500))),
+      duration: Duration(milliseconds: finish),
     );
 
     _progAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -44,7 +44,7 @@ class _ProgressBarState extends State<ProgressBar>
   @override
   void didUpdateWidget(ProgressBar oldWidget) {
     setState(() {
-      finish = (1000 + Random().nextInt(38500));
+      finish = (1000 + Random().nextInt(3500));
       _progController.duration = Duration(milliseconds: finish);
     });
     // _progController.
