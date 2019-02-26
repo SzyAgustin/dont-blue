@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'box_move_vibrate.dart';
+import '../blocs/bloc.dart';
+
+import 'package:vibration/vibration.dart';
 
 class BoxRotate extends StatefulWidget {
   @override
@@ -17,13 +20,19 @@ class _BoxRotateState extends State<BoxRotate>
     super.initState();
     _rotateController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 150),
     );
 
-    _rotateAnimation = Tween(begin: 0.0, end: pi / 4).animate(CurvedAnimation(
+    _rotateAnimation = Tween(begin: 0.0, end: pi / 2).animate(CurvedAnimation(
       parent: _rotateController,
-      curve: Curves.easeIn,
+      curve: Curves.decelerate,
     ));
+
+    _rotateAnimation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _rotateController.reset();
+      } 
+    });
 
     _rotateController.addListener(() {
       setState(() {});
@@ -37,8 +46,8 @@ class _BoxRotateState extends State<BoxRotate>
   }
 
   onTap() {
-    _rotateController.forward();
     setState(() {});
+    _rotateController.forward();
   }
 
   @override

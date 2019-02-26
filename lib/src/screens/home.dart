@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../animations/box_rotate.dart';
+import '../animations/box_move_vibrate.dart';
 
 
 class Home extends StatefulWidget {
@@ -19,7 +19,7 @@ class HomeState extends State<Home> {
         title: Text('Do not touch the Blue!'),
       ),
       body: Center(
-        child: BoxRotate(),
+        child: BoxMoveVibrate(),
       ),
     );
   }

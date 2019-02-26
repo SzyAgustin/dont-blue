@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
+import 'progress_bar.dart';
 import 'dart:math';
 
 class BoxMoveVibrate extends StatefulWidget {
@@ -60,10 +61,19 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
     super.dispose();
   }
 
-  onTap() {
-    _boxController.forward();
-    Vibration.vibrate(duration: 150);
+  @override
+  void didUpdateWidget(BoxMoveVibrate oldWidget) {
     setState(() => color = colors[Random().nextInt(colors.length)]);
+    _boxController.reset();
+    _boxController.forward();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  onTap() {
+    setState(() => color = colors[Random().nextInt(colors.length)]);
+    Vibration.vibrate(duration: 150);
+    // _boxController.reset();
+    _boxController.forward();
   }
 
   @override
@@ -74,6 +84,10 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
         height: _boxAnimation.value,
         width: _boxAnimation.value,
         child: AnimatedContainer(
+          child: Padding(
+            padding: EdgeInsets.all(30),
+            child: ProgressBar(),
+          ),
           duration: Duration(
             milliseconds: 250,
           ),
