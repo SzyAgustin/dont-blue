@@ -61,11 +61,37 @@ class _ProgressBarState extends State<ProgressBar>
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(
-      strokeWidth: 15.0,
-      valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey[350]),
-      value: _progAnimation.value,
-      semanticsLabel: finish.toString(),
+    return Stack(
+      children: [
+        circularProgress(),
+        secondsAmount(),
+      ],
+    );
+  }
+
+  Widget circularProgress() {
+    return Positioned(
+      bottom: 25.0,
+      top: 25.0,
+      right: 25.0,
+      left: 25.0,
+      child: CircularProgressIndicator(
+        strokeWidth: 15.0,
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.blueGrey[300]),
+        value: _progAnimation.value,
+      ),
+    );
+  }
+
+  Widget secondsAmount() {
+    final double seconds = finish/1000;
+    return Center(
+      child: Text('$seconds', style: TextStyle(
+                    fontSize: 40.0,
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blueGrey,
+                  )),
     );
   }
 }

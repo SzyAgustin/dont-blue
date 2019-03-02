@@ -70,10 +70,16 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
   }
 
   onTap() {
-    setState(() => color = colors[Random().nextInt(colors.length)]);
-    Vibration.vibrate(duration: 150);
-    // _boxController.reset();
-    _boxController.forward();
+    if (color != Colors.indigo[700]) {
+      setState(
+        () => color = colors[Random().nextInt(colors.length)],
+      );
+      Vibration.vibrate(duration: 150);
+      // _boxController.reset();
+      _boxController.forward();
+    } else {
+      
+    }
   }
 
   @override
@@ -84,10 +90,7 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
         height: _boxAnimation.value,
         width: _boxAnimation.value,
         child: AnimatedContainer(
-          child: Padding(
-            padding: EdgeInsets.all(30),
-            child: ProgressBar(),
-          ),
+          child: ProgressBar(),
           duration: Duration(
             milliseconds: 250,
           ),
