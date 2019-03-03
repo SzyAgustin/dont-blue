@@ -6,20 +6,22 @@ import 'dart:math';
 class ProgressBar extends StatefulWidget {
   @override
   _ProgressBarState createState() => _ProgressBarState();
+  final int time;
+  ProgressBar({this.time});
+
 }
 
 class _ProgressBarState extends State<ProgressBar>
     with SingleTickerProviderStateMixin {
   AnimationController _progController;
   Animation<double> _progAnimation;
-  int finish = 1000;
 
   @override
   void initState() {
     super.initState();
     _progController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: finish),
+      duration: Duration(milliseconds: widget.time),
     );
 
     _progAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -30,22 +32,13 @@ class _ProgressBarState extends State<ProgressBar>
     _progController.addListener(() {
       setState(() {});
     });
-
-    // _progAnimation.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
-    //     _progController.reset();
-    //   }
-
-    //   _progController.forward();
-    // });
     _progController.forward();
   }
 
   @override
   void didUpdateWidget(ProgressBar oldWidget) {
     setState(() {
-      finish = (1000 + Random().nextInt(3500));
-      _progController.duration = Duration(milliseconds: finish);
+      _progController.duration = Duration(milliseconds: widget.time);
     });
     // _progController.
     _progController.reset();
@@ -84,7 +77,7 @@ class _ProgressBarState extends State<ProgressBar>
   }
 
   Widget secondsAmount() {
-    final double seconds = finish/1000;
+    final double seconds = widget.time/1000;
     return Center(
       child: Text('$seconds', style: TextStyle(
                     fontSize: 40.0,

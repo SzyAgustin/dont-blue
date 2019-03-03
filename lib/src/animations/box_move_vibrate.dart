@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import 'progress_bar.dart';
@@ -22,6 +24,9 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
     Colors.pinkAccent,
     Colors.orangeAccent[400]
   ];
+  int timeToTap = 3001;
+  bool lost = false;
+  Timer timer;
 
   @override
   void initState() {
@@ -70,33 +75,98 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
   }
 
   onTap() {
-    if (color != Colors.indigo[700]) {
-      setState(
-        () => color = colors[Random().nextInt(colors.length)],
-      );
+    if (color == Colors.indigo[700]) {
+      setState(() {
+        Vibration.vibrate(duration: 500);
+        lost = true;
+      });
+    } else { 
+      setState(() {
+        timer.cancel();
+        color = colors[Random().nextInt(colors.length)];
+        timeToTap = (1000 + Random().nextInt(3500));
+        timer = startTimeout();
+      });
       Vibration.vibrate(duration: 150);
-      // _boxController.reset();
       _boxController.forward();
+    }
+  }
+
+  startTimeout() {
+    var duration = Duration(milliseconds: timeToTap + 150);
+    return Timer(duration, handleTimeout);
+  }
+
+  void handleTimeout() {
+    if (color == Colors.indigo[700]) {
+      startAgain();
     } else {
-      
+      setState(() {
+        lost = true;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    timer = startTimeout();
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: _boxAnimation.value,
-        width: _boxAnimation.value,
-        child: AnimatedContainer(
-          child: ProgressBar(),
-          duration: Duration(
-            milliseconds: 250,
+      child: play(),
+    );
+  }
+
+  void startAgain() {
+    setState(() {
+      lost = false;
+      color = colors[Random().nextInt(colors.length)];
+      timeToTap = (1000 + Random().nextInt(3500));
+    });
+    Vibration.vibrate(duration: 150);
+    startTimeout();
+  }
+
+  Widget lostWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('You have lost',
+            style: TextStyle(
+              fontSize: 40.0,
+              letterSpacing: 0,
+              fontWeight: FontWeight.w700,
+              color: Colors.blueGrey,
+            )),
+        MaterialButton(
+          onPressed: startAgain,
+          color: Colors.indigo[700],
+          child: Text(
+            'Start Again?',
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
-          color: color,
-          curve: Curves.easeOut,
+        )
+      ],
+    );
+  }
+
+  Widget play() {
+    if (lost == true) {
+      return lostWidget();
+    }
+    return Container(
+      height: _boxAnimation.value,
+      width: _boxAnimation.value,
+      child: AnimatedContainer(
+        child: ProgressBar(
+          time: timeToTap,
         ),
+        duration: Duration(
+          milliseconds: 250,
+        ),
+        color: color,
+        curve: Curves.easeOut,
       ),
     );
   }
