@@ -57,7 +57,7 @@ class _ProgressBarState extends State<ProgressBar>
     return Stack(
       children: [
         circularProgress(),
-        secondsAmount(),
+        // secondsAmount(),
       ],
     );
   }

@@ -19,7 +19,12 @@ class HomeState extends State<Home> {
         title: Text('Do not touch the Blue!'),
       ),
       body: Center(
-        child: BoxMoveVibrate(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            BoxMoveVibrate(),
+          ],
+        ),
       ),
     );
   }

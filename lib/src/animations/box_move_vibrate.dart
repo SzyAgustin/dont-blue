@@ -21,12 +21,14 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
     Colors.greenAccent[700],
     Colors.redAccent[700],
     Colors.yellowAccent[700],
-    Colors.pinkAccent,
-    Colors.orangeAccent[400]
+    // Colors.pinkAccent,
+    // Colors.orangeAccent[400]
   ];
-  int timeToTap = 3001;
+  int timeToTap = 1000;
   bool lost = false;
-  Timer timer;
+  static Timer _timer;
+  bool firstTime = true;
+  int points = 0;
 
   @override
   void initState() {
@@ -79,58 +81,86 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
       setState(() {
         Vibration.vibrate(duration: 500);
         lost = true;
+        if (_timer.isActive) {
+          _timer.cancel();
+        }
       });
-    } else { 
-      setState(() {
-        timer.cancel();
-        color = colors[Random().nextInt(colors.length)];
-        timeToTap = (1000 + Random().nextInt(3500));
-        timer = startTimeout();
-      });
-      Vibration.vibrate(duration: 150);
+    } else {
       _boxController.forward();
+      newBox();
     }
   }
 
+  void start(){
+    setState(() {
+      points = 0;
+    });
+    _boxController.forward();
+    newBox();
+  }
+
+  //this method should be modified.
+  void newBox() {
+    setState(() {
+      if (firstTime) {
+        firstTime = false;
+        _timer = startTimeout();
+        points++;
+      } else {
+        if (_timer.isActive) {
+          _timer.cancel();
+        }
+        lost = false;
+        // if (points/7 )
+        color = colors[Random().nextInt(colors.length)];
+        timeToTap = (250 + Random().nextInt(350));
+        _timer = startTimeout();
+        points++;
+      }
+    });
+    Vibration.vibrate(duration: 150);
+  }
+
   startTimeout() {
-    var duration = Duration(milliseconds: timeToTap + 150);
+    var duration = Duration(milliseconds: timeToTap + 250);
     return Timer(duration, handleTimeout);
   }
 
   void handleTimeout() {
     if (color == Colors.indigo[700]) {
-      startAgain();
+      _boxController.forward();
+      newBox();
     } else {
       setState(() {
         lost = true;
       });
+      Vibration.vibrate(duration: 500);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    timer = startTimeout();
     return GestureDetector(
       onTap: onTap,
       child: play(),
     );
   }
 
-  void startAgain() {
-    setState(() {
-      lost = false;
-      color = colors[Random().nextInt(colors.length)];
-      timeToTap = (1000 + Random().nextInt(3500));
-    });
-    Vibration.vibrate(duration: 150);
-    startTimeout();
+  Widget play() {
+    if (firstTime) {
+      return startView("Are you ready?");
+    }
+    if (lost) {
+      return startView("Lost at $points boxes");
+    }
+    return box();
   }
 
-  Widget lostWidget() {
+  Widget startView(String message) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text('You have lost',
+        Text('$message',
             style: TextStyle(
               fontSize: 40.0,
               letterSpacing: 0,
@@ -138,10 +168,10 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
               color: Colors.blueGrey,
             )),
         MaterialButton(
-          onPressed: startAgain,
+          onPressed: start,
           color: Colors.indigo[700],
           child: Text(
-            'Start Again?',
+            'Start game',
             style: TextStyle(
               color: Colors.white,
             ),
@@ -151,23 +181,32 @@ class _BoxMoveVibrateState extends State<BoxMoveVibrate>
     );
   }
 
-  Widget play() {
-    if (lost == true) {
-      return lostWidget();
-    }
-    return Container(
-      height: _boxAnimation.value,
-      width: _boxAnimation.value,
-      child: AnimatedContainer(
-        child: ProgressBar(
-          time: timeToTap,
+  Widget box() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('$points',
+            style: TextStyle(
+              fontSize: 40.0,
+              letterSpacing: 0,
+              fontWeight: FontWeight.w700,
+              color: Colors.blueGrey,
+            )),
+        Container(
+          height: _boxAnimation.value,
+          width: _boxAnimation.value,
+          child: AnimatedContainer(
+            child: ProgressBar(
+              time: timeToTap,
+            ),
+            duration: Duration(
+              milliseconds: 250,
+            ),
+            color: color,
+            curve: Curves.easeOut,
+          ),
         ),
-        duration: Duration(
-          milliseconds: 250,
-        ),
-        color: color,
-        curve: Curves.easeOut,
-      ),
+      ],
     );
   }
 }
